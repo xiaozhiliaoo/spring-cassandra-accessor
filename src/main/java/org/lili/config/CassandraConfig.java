@@ -14,27 +14,11 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author lili
- * @date 2022/11/11 14:41
+ * @date 2022/11/01 14:41
  */
 @Configuration
 @Slf4j
 public class CassandraConfig {
-
-    //@Bean
-    public AccessorFactoryBean createHotelAccessor(@Qualifier("cqlSession") Session session) {
-        AccessorFactoryBean bean = new AccessorFactoryBean();
-        bean.setAccessorInterface(HotelAccessor.class);
-        bean.setSession(session);
-        return bean;
-    }
-
-    //@Bean
-    public AccessorFactoryBean createGuestsAccessor(@Qualifier("cqlSession") Session session) {
-        AccessorFactoryBean bean = new AccessorFactoryBean();
-        bean.setAccessorInterface(GuestsAccessor.class);
-        bean.setSession(session);
-        return bean;
-    }
 
     @Bean(name = "cqlSession")
     public Session session() throws Exception {
@@ -58,10 +42,8 @@ public class CassandraConfig {
     public AccessorScannerConfigurer configurer(@Qualifier("cqlSession") Session session) {
         log.info("AccessorScannerConfigurer start");
         AccessorScannerConfigurer configurer = new AccessorScannerConfigurer();
-        configurer.setBasePackage("org.lili.cassandra.accessor");
-        configurer.setAnnotationClass(Accessor.class);
         configurer.setSession(session);
-        configurer.setAccessorFactoryBean(AccessorFactoryBean.class);
+        configurer.setBasePackage("org.lili.cassandra.accessor");
         return configurer;
     }
 }

@@ -19,10 +19,10 @@ import java.lang.annotation.Annotation;
 import static org.springframework.util.Assert.notNull;
 
 /**
- * 配置AccessorScanner，配置完开始扫描
+ * 配置AccessorScanner的属性，配置完开始扫描
  *
  * @author lili
- * @date 2022/11/10 18:25
+ * @date 2022/11/01 18:25
  */
 @Slf4j
 public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProcessor,
@@ -64,12 +64,12 @@ public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProc
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory factory) throws BeansException {
         // left intentionally blank
-        log.info("postProcessBeanFactory:{},{},{}", basePackage, annotationClass, accessorFactoryBeanClass);
+        log.debug("postProcessBeanFactory:{},{},{}", basePackage, annotationClass, accessorFactoryBeanClass);
     }
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        log.info("postProcessBeanDefinitionRegistry start:{},{},{}", basePackage, annotationClass, accessorFactoryBeanClass);
+        log.debug("postProcessBeanDefinitionRegistry start:{},{},{}", basePackage, annotationClass, accessorFactoryBeanClass);
 
         AccessorScanner scanner = new AccessorScanner(registry);
         scanner.setSession(this.session);
@@ -80,8 +80,6 @@ public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProc
         //扫描包下面的bean
         String[] basePackages = StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
         scanner.scan(basePackages);
-        log.info("postProcessBeanDefinitionRegistry end:{},{},{}", basePackage, annotationClass, accessorFactoryBeanClass);
-
     }
 
     @Override
@@ -92,7 +90,6 @@ public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProc
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
-        log.info("setApplicationContext in accessor");
         this.applicationContext = applicationContext;
     }
 

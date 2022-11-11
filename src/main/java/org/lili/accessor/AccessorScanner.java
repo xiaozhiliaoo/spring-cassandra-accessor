@@ -24,7 +24,7 @@ import java.util.Set;
  * 扫描带有Accessor注解的接口
  *
  * @author lili
- * @date 2022/11/10 19:38
+ * @date 2022/11/01 19:38
  */
 @Slf4j
 public class AccessorScanner extends ClassPathBeanDefinitionScanner {
@@ -91,7 +91,7 @@ public class AccessorScanner extends ClassPathBeanDefinitionScanner {
             String beanClassName = definition.getBeanClassName();
             definition.getConstructorArgumentValues().addGenericArgumentValue(beanClassName);
             try {
-                definition.getPropertyValues().add("accessorInterface", Resources.classForName(beanClassName));
+                definition.getPropertyValues().add("accessorInterface", Class.forName(beanClassName));
             } catch (ClassNotFoundException e) {
                 // ignore
             }

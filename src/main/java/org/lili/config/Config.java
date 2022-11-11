@@ -19,8 +19,7 @@ import java.sql.Connection;
  * @date 2022/11/11 9:51
  */
 @Configuration
-@MapperScan(
-        basePackages = Config.PACKAGE)
+@MapperScan(basePackages = Config.PACKAGE)
 @Slf4j
 public class Config {
     static final String PACKAGE = "org.lili.mapper";
@@ -55,7 +54,6 @@ public class Config {
         log.info("isValid: {}", conn.isValid(5));
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(mysqlDataSource);
-        sessionFactory.setTypeAliasesPackage(PACKAGE);
         return sessionFactory.getObject();
     }
 }

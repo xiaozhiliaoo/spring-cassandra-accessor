@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author lili
- * @date 2022/11/10 19:46
+ * @date 2022/11/01 19:46
  */
 @Slf4j
 public class AccessorScannerRegistrar implements ImportBeanDefinitionRegistrar {
@@ -53,6 +53,7 @@ public class AccessorScannerRegistrar implements ImportBeanDefinitionRegistrar {
 
         List<String> basePackages = new ArrayList<>();
 
+
         basePackages.addAll(Arrays.stream(annoAttrs.getStringArray("basePackages")).filter(StringUtils::hasText)
                 .collect(Collectors.toList()));
 
@@ -67,7 +68,8 @@ public class AccessorScannerRegistrar implements ImportBeanDefinitionRegistrar {
 
         registry.registerBeanDefinition(beanName, builder.getBeanDefinition());
 
-        log.info("registerBeanDefinitions inner end beanName:{},annoAttrs:{}", beanName, annoAttrs);
+        log.info("registerBeanDefinitions inner end beanName:{},annoAttrs:{},beanClassName:{}",
+                beanName, annoAttrs, builder.getBeanDefinition().getBeanClassName());
 
     }
 

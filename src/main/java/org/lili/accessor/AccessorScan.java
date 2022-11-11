@@ -20,6 +20,10 @@ import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
+/**
+ * 注解用来扫描包下面的Accessor接口
+ * // TODO: 2022/11/01 暂未实现自动装配
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
@@ -38,4 +42,8 @@ public @interface AccessorScan {
 
 
     Class<? extends Annotation> annotationClass() default Annotation.class;
+
+
+    String cqlSessionRef() default "";
+
 }

@@ -8,8 +8,10 @@ import org.springframework.beans.factory.FactoryBean;
 import static org.springframework.util.Assert.notNull;
 
 /**
+ * 生成Accessor对象的工厂Bean
+ *
  * @author lili
- * @date 2022/11/10 20:29
+ * @date 2022/11/01 20:29
  */
 @Slf4j
 public class AccessorFactoryBean<T> implements FactoryBean<T> {
@@ -53,6 +55,7 @@ public class AccessorFactoryBean<T> implements FactoryBean<T> {
     public T getObject() throws Exception {
         notNull(this.accessorInterface, "Property 'accessorInterface' is required");
         Session session = getSession();
+        notNull(session, "session can not be null");
         MappingManager mappingManager = new MappingManager(session);
         return mappingManager.createAccessor(accessorInterface);
     }
