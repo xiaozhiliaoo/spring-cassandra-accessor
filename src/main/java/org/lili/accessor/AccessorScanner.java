@@ -1,9 +1,13 @@
 package org.lili.accessor;
 
+import com.datastax.driver.core.Session;
+import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.annotations.Accessor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.io.Resources;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -28,6 +33,15 @@ public class AccessorScanner extends ClassPathBeanDefinitionScanner {
 
     private Class<? extends Annotation> annotationClass;
 
+    private Session session;
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
 
     public void setAccessorFactoryBeanClass(Class<? extends AccessorFactoryBean> AccessorFactoryBeanClass) {
         this.accessorFactoryBeanClass = AccessorFactoryBeanClass == null ? AccessorFactoryBean.class : AccessorFactoryBeanClass;
@@ -60,7 +74,7 @@ public class AccessorScanner extends ClassPathBeanDefinitionScanner {
     }
 
     /**
-     * 处理扫描出来的Bean
+     * 处理扫描出来的Bean，将bean转换成AccessorFactoryBean
      *
      * @param beanDefinitionHolders
      */
@@ -70,13 +84,27 @@ public class AccessorScanner extends ClassPathBeanDefinitionScanner {
             log.info("beanDefinitionHolders is empty,check package");
             return;
         }
-        ;
+        AbstractBeanDefinition definition;
         for (BeanDefinitionHolder holder : beanDefinitionHolders) {
-            GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
+            definition = (AbstractBeanDefinition) holder.getBeanDefinition();
             definition.setScope("singleton");
+            String beanClassName = definition.getBeanClassName();
+            definition.getConstructorArgumentValues().addGenericArgumentValue(beanClassName);
+            try {
+                definition.getPropertyValues().add("accessorInterface", Resources.classForName(beanClassName));
+            } catch (ClassNotFoundException e) {
+                // ignore
+            }
+
             //将Bean改造成 MapperFactoryBean类型
             definition.setBeanClass(this.accessorFactoryBeanClass);
-            log.info("process every bean:{},{}", definition.getBeanClassName(), this.accessorFactoryBeanClass.getClass());
+            //构造MapperFactoryBean属性
+            if (Objects.nonNull(session)) {
+                logger.info("config bean property, session");
+                definition.getPropertyValues().add("session", session);
+                definition.getPropertyValues().add("mappingManager", new MappingManager(session));
+            }
+            log.info("process every bean:{},{}", beanClassName, this.accessorFactoryBeanClass.getClass());
         }
     }
 

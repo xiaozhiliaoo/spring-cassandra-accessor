@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@AccessorScan(basePackages = "org.lili.cassandra.accessor")
+//@AccessorScan(basePackages = "org.lili.cassandra.accessor")
 public class CassdandraAccessorApplication {
 
     public static void main(String[] args) {

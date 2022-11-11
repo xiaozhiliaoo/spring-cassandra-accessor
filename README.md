@@ -1,6 +1,5 @@
 # 思路
 
-1. 通过FactoryBean生成，而不是Accessor，但是需要在Accessor上加Component
-2. Accessor+AccessorScan方式
-
-先手动配置，后注解声明化处理。
+1. 第一步：AccessorFactoryBean（手动配置）
+2. 第二步：AccessorScannerConfigurer（手动配置）
+3. 第三步：AccessorScannerRegistrar（注解配置）

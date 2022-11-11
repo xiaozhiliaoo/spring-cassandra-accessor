@@ -1,5 +1,6 @@
 package org.lili.accessor;
 
+import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.annotations.Accessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -35,8 +36,17 @@ public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProc
 
     private ApplicationContext applicationContext;
 
+    private Session session;
+
     private String beanName;
 
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
 
     public void setBasePackage(String basePackage) {
         this.basePackage = basePackage;
@@ -62,9 +72,9 @@ public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProc
         log.info("postProcessBeanDefinitionRegistry start:{},{},{}", basePackage, annotationClass, accessorFactoryBeanClass);
 
         AccessorScanner scanner = new AccessorScanner(registry);
+        scanner.setSession(this.session);
         scanner.setAccessorFactoryBeanClass(this.accessorFactoryBeanClass);
         scanner.setAnnotationClass(this.annotationClass);
-        scanner.setAnnotationClass(Accessor.class);
         //注册过滤器
         scanner.registerFilters();
         //扫描包下面的bean

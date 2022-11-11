@@ -2,8 +2,10 @@ package org.lili.config;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.policies.DefaultRetryPolicy;
+import com.datastax.driver.mapping.annotations.Accessor;
 import lombok.extern.slf4j.Slf4j;
 import org.lili.accessor.AccessorFactoryBean;
+import org.lili.accessor.AccessorScannerConfigurer;
 import org.lili.cassandra.accessor.GuestsAccessor;
 import org.lili.cassandra.accessor.HotelAccessor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,11 +16,11 @@ import org.springframework.context.annotation.Configuration;
  * @author lili
  * @date 2022/11/11 14:41
  */
-//@Configuration
+@Configuration
 @Slf4j
 public class CassandraConfig {
 
-    @Bean
+    //@Bean
     public AccessorFactoryBean createHotelAccessor(@Qualifier("cqlSession") Session session) {
         AccessorFactoryBean bean = new AccessorFactoryBean();
         bean.setAccessorInterface(HotelAccessor.class);
@@ -26,7 +28,7 @@ public class CassandraConfig {
         return bean;
     }
 
-    @Bean
+    //@Bean
     public AccessorFactoryBean createGuestsAccessor(@Qualifier("cqlSession") Session session) {
         AccessorFactoryBean bean = new AccessorFactoryBean();
         bean.setAccessorInterface(GuestsAccessor.class);
@@ -50,5 +52,16 @@ public class CassandraConfig {
         Cluster cluster = builder.addContactPoint("10.108.160.30").build();
 
         return cluster.connect("adaplearn_tiku_test");
+    }
+
+    @Bean
+    public AccessorScannerConfigurer configurer(@Qualifier("cqlSession") Session session) {
+        log.info("AccessorScannerConfigurer start");
+        AccessorScannerConfigurer configurer = new AccessorScannerConfigurer();
+        configurer.setBasePackage("org.lili.cassandra.accessor");
+        configurer.setAnnotationClass(Accessor.class);
+        configurer.setSession(session);
+        configurer.setAccessorFactoryBean(AccessorFactoryBean.class);
+        return configurer;
     }
 }
