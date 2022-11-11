@@ -1,6 +1,7 @@
 package org.lili.accessor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -60,6 +61,9 @@ public class AccessorScannerRegistrar implements ImportBeanDefinitionRegistrar {
         }
 
         builder.addPropertyValue("basePackage", StringUtils.collectionToCommaDelimitedString(basePackages));
+
+        // for spring-native
+        builder.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 
         registry.registerBeanDefinition(beanName, builder.getBeanDefinition());
 

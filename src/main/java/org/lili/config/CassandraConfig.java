@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @author lili
  * @date 2022/11/11 14:41
  */
-@Configuration
+//@Configuration
 @Slf4j
 public class CassandraConfig {
 

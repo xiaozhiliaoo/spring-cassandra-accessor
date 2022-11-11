@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.util.CollectionUtils;
@@ -73,6 +74,7 @@ public class AccessorScanner extends ClassPathBeanDefinitionScanner {
         for (BeanDefinitionHolder holder : beanDefinitionHolders) {
             GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
             definition.setScope("singleton");
+            //将Bean改造成 MapperFactoryBean类型
             definition.setBeanClass(this.accessorFactoryBeanClass);
             log.info("process every bean:{},{}", definition.getBeanClassName(), this.accessorFactoryBeanClass.getClass());
         }
@@ -102,4 +104,5 @@ public class AccessorScanner extends ClassPathBeanDefinitionScanner {
         log.info("registerFilters end. acceptAllInterfaces:{}", acceptAllInterfaces);
 
     }
+
 }

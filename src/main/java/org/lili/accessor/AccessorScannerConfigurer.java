@@ -3,10 +3,13 @@ package org.lili.accessor;
 import com.datastax.driver.mapping.annotations.Accessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.StringUtils;
 
@@ -22,13 +25,18 @@ import static org.springframework.util.Assert.notNull;
  */
 @Slf4j
 public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProcessor,
-        InitializingBean {
+        InitializingBean, ApplicationContextAware, BeanNameAware {
 
     private String basePackage;
 
     private Class<? extends Annotation> annotationClass;
 
     private Class<? extends AccessorFactoryBean> accessorFactoryBeanClass;
+
+    private ApplicationContext applicationContext;
+
+    private String beanName;
+
 
     public void setBasePackage(String basePackage) {
         this.basePackage = basePackage;
@@ -71,4 +79,15 @@ public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProc
         notNull(this.basePackage, "Property 'basePackage' is required");
     }
 
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        log.info("setApplicationContext in accessor");
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.beanName = name;
+    }
 }
