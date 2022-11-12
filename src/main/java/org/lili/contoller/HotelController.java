@@ -1,6 +1,9 @@
 package org.lili.contoller;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.datastax.driver.core.ResultSet;
+import com.youdao.ke.courseop.common.cassandra.CassandraProperties;
+import com.youdao.ke.courseop.common.cassandra.CommonCassandraConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.lili.cassandra.accessor.GuestsAccessor;
 import org.lili.cassandra.accessor.HotelAccessor;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -33,6 +37,9 @@ public class HotelController {
 
     @Autowired
     private GuestsAccessor guestsAccessor;
+
+    @Autowired
+    private CassandraProperties cp;
 
 
     @GetMapping("getPerson")
@@ -58,5 +65,10 @@ public class HotelController {
         String txt = "查找";
         ResultSet resultSet = guestsAccessor.insertIfNotExists(uuid);
         return resultSet.wasApplied();
+    }
+
+    @GetMapping("cp")
+    public List<String> cp() {
+        return cp.getContactPoints();
     }
 }
