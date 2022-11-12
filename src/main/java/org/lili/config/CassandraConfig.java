@@ -2,12 +2,9 @@ package org.lili.config;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.policies.DefaultRetryPolicy;
-import com.datastax.driver.mapping.annotations.Accessor;
 import lombok.extern.slf4j.Slf4j;
-import org.lili.accessor.AccessorFactoryBean;
-import org.lili.accessor.AccessorScannerConfigurer;
-import org.lili.cassandra.accessor.GuestsAccessor;
-import org.lili.cassandra.accessor.HotelAccessor;
+import org.lili.accessor.AccessorScan;
+import org.lili.accessor.CqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +15,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @Slf4j
+@AccessorScan(basePackages = "org.lili.cassandra.accessor",
+        cqlSessionRef = "fb")
+
 public class CassandraConfig {
 
     @Bean(name = "cqlSession")
@@ -38,12 +38,19 @@ public class CassandraConfig {
         return cluster.connect("adaplearn_tiku_test");
     }
 
-    @Bean
-    public AccessorScannerConfigurer configurer(@Qualifier("cqlSession") Session session) {
-        log.info("AccessorScannerConfigurer start");
-        AccessorScannerConfigurer configurer = new AccessorScannerConfigurer();
-        configurer.setSession(session);
-        configurer.setBasePackage("org.lili.cassandra.accessor");
-        return configurer;
+//    @Bean
+//    public AccessorScannerConfigurer configurer(@Qualifier("cqlSession") Session session) {
+//        log.info("AccessorScannerConfigurer start");
+//        AccessorScannerConfigurer configurer = new AccessorScannerConfigurer();
+//        configurer.setSession(session);
+//        configurer.setBasePackage("org.lili.cassandra.accessor");
+//        return configurer;
+//    }
+
+    @Bean(name = "fb")
+    public CqlSessionFactoryBean factoryBean(@Qualifier("cqlSession") Session session) {
+        CqlSessionFactoryBean bean = new CqlSessionFactoryBean();
+        bean.setSession(session);
+        return bean;
     }
 }

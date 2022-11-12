@@ -21,14 +21,6 @@ public class AccessorFactoryBean<T> implements FactoryBean<T> {
     private MappingManager mappingManager;
     private Class<T> accessorInterface;
 
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
     public MappingManager getMappingManager() {
         return mappingManager;
     }
@@ -39,6 +31,14 @@ public class AccessorFactoryBean<T> implements FactoryBean<T> {
 
     public void setAccessorInterface(Class<T> accessorInterface) {
         this.accessorInterface = accessorInterface;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public AccessorFactoryBean() {

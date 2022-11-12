@@ -51,6 +51,11 @@ public class AccessorScannerRegistrar implements ImportBeanDefinitionRegistrar {
             builder.addPropertyValue("accessorFactoryBeanClass", accessorFactoryBeanClass);
         }
 
+        String sqlSessionFactoryRef = annoAttrs.getString("cqlSessionRef");
+        if (StringUtils.hasText(sqlSessionFactoryRef)) {
+            builder.addPropertyValue("cqlSessionFactoryBeanName", annoAttrs.getString("cqlSessionRef"));
+        }
+
         List<String> basePackages = new ArrayList<>();
 
 

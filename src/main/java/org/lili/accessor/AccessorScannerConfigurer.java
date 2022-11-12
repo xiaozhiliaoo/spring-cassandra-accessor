@@ -1,7 +1,6 @@
 package org.lili.accessor;
 
 import com.datastax.driver.core.Session;
-import com.datastax.driver.mapping.annotations.Accessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
@@ -40,6 +39,16 @@ public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProc
 
     private String beanName;
 
+    private String cqlSessionFactoryBeanName;
+
+    public String getCqlSessionFactoryBeanName() {
+        return cqlSessionFactoryBeanName;
+    }
+
+    public void setCqlSessionFactoryBeanName(String cqlSessionFactoryBeanName) {
+        this.cqlSessionFactoryBeanName = cqlSessionFactoryBeanName;
+    }
+
     public Session getSession() {
         return session;
     }
@@ -75,6 +84,7 @@ public class AccessorScannerConfigurer implements BeanDefinitionRegistryPostProc
         scanner.setSession(this.session);
         scanner.setAccessorFactoryBeanClass(this.accessorFactoryBeanClass);
         scanner.setAnnotationClass(this.annotationClass);
+        scanner.setCqlSessionFactoryBeanName(this.cqlSessionFactoryBeanName);
         //注册过滤器
         scanner.registerFilters();
         //扫描包下面的bean

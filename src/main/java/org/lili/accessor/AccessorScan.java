@@ -44,6 +44,11 @@ public @interface AccessorScan {
     Class<? extends Annotation> annotationClass() default Annotation.class;
 
 
+    /**
+     * session配置的Bean的名字
+     *
+     * @return
+     */
     String cqlSessionRef() default "";
 
 }

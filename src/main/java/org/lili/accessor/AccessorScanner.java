@@ -4,20 +4,18 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.annotations.Accessor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.io.Resources;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -34,6 +32,17 @@ public class AccessorScanner extends ClassPathBeanDefinitionScanner {
     private Class<? extends Annotation> annotationClass;
 
     private Session session;
+
+
+    private String cqlSessionFactoryBeanName;
+
+    public String getCqlSessionFactoryBeanName() {
+        return cqlSessionFactoryBeanName;
+    }
+
+    public void setCqlSessionFactoryBeanName(String cqlSessionFactoryBeanName) {
+        this.cqlSessionFactoryBeanName = cqlSessionFactoryBeanName;
+    }
 
     public Session getSession() {
         return session;
@@ -99,7 +108,11 @@ public class AccessorScanner extends ClassPathBeanDefinitionScanner {
             //将Bean改造成 MapperFactoryBean类型
             definition.setBeanClass(this.accessorFactoryBeanClass);
             //构造MapperFactoryBean属性
-            if (Objects.nonNull(session)) {
+
+            if (StringUtils.hasText(this.cqlSessionFactoryBeanName)) {
+                definition.getPropertyValues().add("session",
+                        new RuntimeBeanReference(this.cqlSessionFactoryBeanName));
+            } else if (this.session != null) {
                 logger.info("config bean property, session");
                 definition.getPropertyValues().add("session", session);
                 definition.getPropertyValues().add("mappingManager", new MappingManager(session));
