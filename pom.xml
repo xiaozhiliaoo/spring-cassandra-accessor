@@ -56,32 +56,21 @@
         </dependency>
 
         <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-mapping</artifactId>
-            <version>3.7.0</version>
+            <groupId>com.youdao.ke.courseop.common</groupId>
+            <artifactId>common-cassandra</artifactId>
+            <version>dev.0.0.104</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-extras</artifactId>
-            <version>3.7.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-core</artifactId>
-            <version>3.7.0</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.codahale.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>3.0.2</version>
-        </dependency>
-
 
     </dependencies>
+
+
+    <repositories>
+        <repository>
+            <id>YoudaoRepo</id>
+            <name>YoudaoRepo</name>
+            <url>https://nexus3.corp.youdao.com/repository/maven-releases/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

@@ -1,11 +1,13 @@
 package org.lili;
 
-import org.lili.accessor.AccessorScan;
+import com.youdao.ke.courseop.common.cassandra.CommonCassandraConfiguration;
+import com.youdao.ke.courseop.common.cassandra.accessor.AccessorScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-//@AccessorScan(basePackages = "org.lili.cassandra.accessor")
+@Import(CommonCassandraConfiguration.class)
 public class CassdandraAccessorApplication {
 
     public static void main(String[] args) {

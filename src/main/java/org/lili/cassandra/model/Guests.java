@@ -1,9 +1,6 @@
 package org.lili.cassandra.model;
 
-import com.datastax.driver.mapping.annotations.Column;
-import com.datastax.driver.mapping.annotations.FrozenValue;
-import com.datastax.driver.mapping.annotations.PartitionKey;
-import com.datastax.driver.mapping.annotations.Table;
+import com.datastax.driver.mapping.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +25,8 @@ import java.util.UUID;
 public class Guests {
 
     @PartitionKey
-    private UUID guest_id;
+    @Column(name = "guest_id")
+    private UUID guestId;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")

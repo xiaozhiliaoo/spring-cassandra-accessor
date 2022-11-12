@@ -2,26 +2,24 @@ package org.lili.config;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.policies.DefaultRetryPolicy;
-import com.datastax.driver.mapping.annotations.Accessor;
+import com.datastax.driver.mapping.MappingManager;
+import com.youdao.ke.courseop.common.cassandra.accessor.AccessorScannerConfigurer;
 import lombok.extern.slf4j.Slf4j;
-import org.lili.accessor.AccessorFactoryBean;
-import org.lili.accessor.AccessorScannerConfigurer;
-import org.lili.cassandra.accessor.GuestsAccessor;
-import org.lili.cassandra.accessor.HotelAccessor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Objects;
 
 /**
  * @author lili
  * @date 2022/11/01 14:41
  */
-@Configuration
 @Slf4j
+@Configuration
 public class CassandraConfig {
 
-    @Bean(name = "cqlSession")
-    public Session session() throws Exception {
+    @Bean
+    public Cluster cluster() {
         log.info("init cqlSessionFactory");
         QueryOptions queryOption = new QueryOptions()
                 .setFetchSize(1000)
@@ -34,15 +32,25 @@ public class CassandraConfig {
                 .withSocketOptions(socketOptions)
                 .withRetryPolicy(DefaultRetryPolicy.INSTANCE);
         Cluster cluster = builder.addContactPoint("10.108.160.30").build();
-
-        return cluster.connect("adaplearn_tiku_test");
+        return cluster;
     }
 
     @Bean
-    public AccessorScannerConfigurer configurer(@Qualifier("cqlSession") Session session) {
-        log.info("AccessorScannerConfigurer start");
+    public Session session() {
+        return cluster().connect("adaplearn_tiku_test");
+    }
+
+
+    @Bean
+    public MappingManager mappingManager() {
+        return new MappingManager(session());
+    }
+
+    @Bean
+    public AccessorScannerConfigurer configurer() {
+        log.info("AccessorScannerConfigurer start,{}", Objects.isNull(session()));
         AccessorScannerConfigurer configurer = new AccessorScannerConfigurer();
-        configurer.setSession(session);
+        configurer.setSession(session());
         configurer.setBasePackage("org.lili.cassandra.accessor");
         return configurer;
     }

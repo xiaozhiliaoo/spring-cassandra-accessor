@@ -1,12 +1,13 @@
 package org.lili.cassandra.accessor;
 
+import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Accessor;
+import com.datastax.driver.mapping.annotations.Param;
 import com.datastax.driver.mapping.annotations.Query;
 import org.lili.cassandra.model.Guests;
-import org.lili.cassandra.model.Hotel;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Role;
+
+import java.util.UUID;
 
 /**
  * 用户试卷作答
@@ -18,5 +19,11 @@ import org.springframework.context.annotation.Role;
 public interface GuestsAccessor {
 
     @Query("SELECT * FROM guests where guest_id=?")
-    Result<Guests> getByGuests(String uuid);
+    Result<Guests> getByGuests(UUID guest_id);
+
+    @Query("insert into guests (guest_id) values (:guestId)")
+    ResultSet insert(@Param("guestId") UUID guestId);
+
+    @Query("insert into guests (guest_id) values (:guestId) IF NOT EXISTS")
+    ResultSet insertIfNotExists(@Param("guestId") UUID guestId);
 }
