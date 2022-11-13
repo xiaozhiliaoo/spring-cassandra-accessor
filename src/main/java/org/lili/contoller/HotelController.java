@@ -1,9 +1,8 @@
 package org.lili.contoller;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.mapping.MappingManager;
 import com.youdao.ke.courseop.common.cassandra.CassandraProperties;
-import com.youdao.ke.courseop.common.cassandra.CommonCassandraConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.lili.cassandra.accessor.GuestsAccessor;
 import org.lili.cassandra.accessor.HotelAccessor;
@@ -30,13 +29,16 @@ public class HotelController {
     private static final UUID uuid = UUID.randomUUID();
 
     @Autowired
-    private PersonMapper personMapper;
+    private MappingManager mappingManager;
 
     @Autowired
     private HotelAccessor hotelAccessor;
 
     @Autowired
     private GuestsAccessor guestsAccessor;
+
+    @Autowired
+    private PersonMapper personMapper;
 
     @Autowired
     private CassandraProperties cp;

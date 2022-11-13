@@ -58,7 +58,8 @@
         <dependency>
             <groupId>com.youdao.ke.courseop.common</groupId>
             <artifactId>common-cassandra</artifactId>
-            <version>dev.0.0.111</version>
+            <version>dev.0.0.120</version>
+<!--            <version>0.0.1</version>-->
         </dependency>
 
     </dependencies>
