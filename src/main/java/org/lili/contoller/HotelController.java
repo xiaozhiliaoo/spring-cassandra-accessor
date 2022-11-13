@@ -32,40 +32,31 @@ public class HotelController {
     private MappingManager mappingManager;
 
     @Autowired
-    private HotelAccessor hotelAccessor;
-
-    @Autowired
-    private GuestsAccessor guestsAccessor;
-
-    @Autowired
-    private PersonMapper personMapper;
-
-    @Autowired
     private CassandraProperties cp;
 
 
     @GetMapping("getPerson")
     public Person getById(@RequestParam Integer id) {
-        return personMapper.selectById(id);
+        return mappingManager.createAccessor(PersonMapper.class).selectById(id);
     }
 
     @GetMapping("getHotel")
     public String getHotel(@RequestParam String id) {
         String txt = "查找";
-        Guests g = guestsAccessor.getByGuests(uuid).one();
+        Guests g = mappingManager.createAccessor(GuestsAccessor.class).getByGuests(uuid).one();
         log.info("guest id:{}", g);
         if (Objects.isNull(g)) {
             txt = "未找到Guest";
         } else {
             txt = "找到Guest";
         }
-        return hotelAccessor.getByHotel(id).one().getName() + txt;
+        return mappingManager.createAccessor(HotelAccessor.class).getByHotel(id).one().getName() + txt;
     }
 
     @GetMapping("saveGuest")
     public boolean saveGuest() {
         String txt = "查找";
-        ResultSet resultSet = guestsAccessor.insertIfNotExists(uuid);
+        ResultSet resultSet = mappingManager.createAccessor(GuestsAccessor.class).insertIfNotExists(uuid);
         return resultSet.wasApplied();
     }
 

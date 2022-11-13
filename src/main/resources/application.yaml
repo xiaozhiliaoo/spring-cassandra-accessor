@@ -1,0 +1,25 @@
+db:
+  mysql:
+    password: 238888
+    url: jdbc:mysql://localhost:3306/training?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+logging:
+  level:
+    org:
+      springframework: TRACE
+    root: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %magenta(%-5level) %green([%-50.50class])
+      >>> %cyan(%msg) %n'
+
+
+courseop:
+  common:
+    cassandra:
+      contactPoints:
+        - 10.108.160.30
+      keyspaceName: adaplearn_tiku_test
+      retryPolicy: com.datastax.driver.core.policies.DefaultRetryPolicy
+      loadBalancingPolicy: com.datastax.driver.core.policies.RoundRobinPolicy
+      connectTimeout: "10s"
+      readTimeout: "10s"
